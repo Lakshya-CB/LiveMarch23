@@ -2,7 +2,7 @@ package Lec_04;
 
 public class Pat_15 {
 	public static void main(String[] args) {
-		int n = 5;
+		int n = 8;
 		int r = 1;
 		int tots_sp = 0;
 		int tots_st = n;
