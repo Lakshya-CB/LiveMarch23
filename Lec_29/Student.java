@@ -18,8 +18,7 @@ public class Student {
 	
 	public Student() {
 		// TODO Auto-generated constructor stub
-		Name = "jaaduuu";
-		Age = 9;
+		this("9");
 	}
 	public Student(int lai) {
 		// TODO Auto-generated constructor stub
@@ -27,7 +26,7 @@ public class Student {
 		Age = lai;
 	}
 	public Student(String str) {
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated co	nstructor stub
 		Name = str;
 		Age = 0;
 	}
