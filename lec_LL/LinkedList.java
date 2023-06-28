@@ -246,4 +246,106 @@ public class LinkedList {
 		head = nhead;
 	}
 
+	public Node reverseKGroup(Node given, int k) {
+		if (given == null) {
+			return null;
+		}
+		Node temp = given;
+		for (int i = 0; i < k; i++) {
+			if (temp == null) {
+				return given;
+			}
+			temp = temp.next;
+		}
+		Node sp = reverseKGroup(temp, k); // 6
+		Node curr = given;
+		Node prev = null;
+		for (int i = 0; i < k; i++) {
+			Node after = curr.next;
+			curr.next = prev;
+
+			prev = curr;
+			curr = after;
+		}
+		given.next = sp;
+		return prev;
+
+	}
+
+	public int getMid() {
+		Node fast = head;
+		Node slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		return slow.data;
+	}
+
+	public int lastK(int K) {
+		Node ahead = head;
+		for (int c = 1; c <= K; c++) {
+			ahead = ahead.next;
+		}
+		Node behind = head;
+		while (ahead != null) {
+			ahead = ahead.next;
+			behind = behind.next;
+		}
+		return behind.data;
+
+	}
+
+	public Node getIntersectionNode(Node headA, Node headB) {
+		Node c1 = headA;
+		Node c2 = headB;
+		while (c1 != c2) {
+			c1 = c1.next;
+			c2 = c2.next;
+			if (c1 == c2) {
+				return c1;
+			}
+			if (c1 == null) {
+				c1 = headB;
+			}
+			if (c2 == null) {
+				c2 = headA;
+			}
+		}
+		return c1;
+	}
+
+	public boolean detectCycle() {
+//		flloyd ka cycle detection algo
+		Node fast = head;
+		Node slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+			if (fast == slow) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void breakCycle() {
+		Node fast = head;
+		Node slow = head;
+		while (true) {
+			fast = fast.next.next;
+			slow = slow.next;
+			if (fast == slow) {
+				break;
+			}
+		}
+		Node special = fast;
+		Node c1 = head;
+		while(c1.next !=special.next){
+			c1 = c1.next;
+			special= special.next;
+		}
+		special.next = null;
+		
+	}
 }
