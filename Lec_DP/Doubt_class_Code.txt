@@ -1,0 +1,188 @@
+//LCS TOP DOWN
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        Integer dp[][]=new Integer[text1.length()][text2.length()];
+        return solve(text1,text2,text1.length()-1,text2.length()-1,dp);
+    }
+    public int solve(String s1,String s2,int idx1,int idx2, Integer dp[][]){
+
+        if(idx1==-1 || idx2==-1) return 0;
+        if(dp[idx1][idx2]!=null) return dp[idx1][idx2];
+        if(s1.charAt(idx1)==s2.charAt(idx2)){
+            return dp[idx1][idx2]=1+solve(s1,s2,idx1-1,idx2-1,dp);
+        }
+        else{
+            int sp1=solve(s1,s2,idx1-1,idx2,dp);
+            int sp2=solve(s1,s2,idx1,idx2-1,dp);
+            return dp[idx1][idx2]=Math.max(sp1,sp2);
+        }
+    }
+}
+
+//LCS Bottoms UP
+
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {      
+        return solve2(text1,text2);
+    }
+    // public int solve(String s1,String s2,int idx1,int idx2, Integer dp[][]){
+
+    //     if(idx1==-1 || idx2==-1) return 0;
+    //     if(dp[idx1][idx2]!=null) return dp[idx1][idx2];
+    //     if(s1.charAt(idx1)==s2.charAt(idx2)){
+    //         return dp[idx1][idx2]=1+solve(s1,s2,idx1-1,idx2-1,dp);
+    //     }
+    //     else{
+    //         int sp1=solve(s1,s2,idx1-1,idx2,dp);
+    //         int sp2=solve(s1,s2,idx1,idx2-1,dp);
+    //         return dp[idx1][idx2]=Math.max(sp1,sp2);
+    //     }
+    // }
+    public int solve2(String s1,String s2){
+        Integer dp[][]=new Integer[s1.length()][s2.length()];
+        for(int idx1=0;idx1<s1.length();idx1++){
+            for(int idx2=0;idx2<s2.length();idx2++){
+                 if(s1.charAt(idx1)==s2.charAt(idx2)){
+                     if(idx1-1>=0 && idx2-1>=0){
+                        dp[idx1][idx2]=1+dp[idx1-1][idx2-1];
+                     }
+                     else{
+                         dp[idx1][idx2]=1+0;
+                     }
+                 }
+                 else{
+                    int sp1=0;
+                    if(idx1-1>=0){
+                        sp1=dp[idx1-1][idx2];
+                    }
+                    int sp2=0;
+                    if(idx2-1>=0)sp2= dp[idx1][idx2-1];
+                    dp[idx1][idx2]=Math.max(sp1,sp2);
+                }
+            }
+        }
+        return dp[s1.length()-1][s2.length()-1];
+    }
+  
+}
+
+
+
+// Bottoms Up Space Efficient
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {      
+        return solve2(text1,text2);
+    }
+    public int solve2(String s1,String s2){
+        int dp[][]=new int[2][s2.length()];
+        for(int idx1=0;idx1<s1.length();idx1++){
+            for(int idx2=0;idx2<s2.length();idx2++){
+                 if(s1.charAt(idx1)==s2.charAt(idx2)){
+                     if(idx1-1>=0 && idx2-1>=0){
+                        dp[1][idx2]=1+dp[0][idx2-1];
+                     }
+                     else{
+                         dp[1][idx2]=1+0;
+                     }
+                 }
+                 else{
+                    int sp1=0;
+                    if(idx1-1>=0){
+                        sp1=dp[0][idx2];
+                    }
+                    int sp2=0;
+                    if(idx2-1>=0)sp2= dp[1][idx2-1];
+                    dp[1][idx2]=Math.max(sp1,sp2);
+                }
+            }
+            dp[0]=dp[1];
+            dp[1]=new int[s2.length()];
+        }
+        return dp[0][s2.length()-1];
+    }
+  
+}
+
+
+// Edit Distance
+
+class Solution {
+    public int minDistance(String word1, String word2) {
+	// Edit Distance
+        Integer dp[][]=new Integer[word1.length()][word2.length()];
+        return solve(word1,word2,word1.length()-1,word2.length()-1,dp);
+    }
+    public int solve(String s1,String s2,int idx1,int idx2,Integer dp[][]){
+        if(idx1==-1 && idx2==-1) return 0;
+        if(idx1<0)  return idx2+1;
+        if(idx2<0) return idx1+1;
+        if(dp[idx1][idx2]!=null) return dp[idx1][idx2];
+        if(s1.charAt(idx1)==s2.charAt(idx2)){
+            return dp[idx1][idx2]=solve(s1,s2,idx1-1,idx2-1,dp);
+        }
+        else{
+           // Insert
+           int sp1=1+solve(s1,s2,idx1,idx2-1,dp);
+            //Delete
+            int sp2=1+solve(s1,s2,idx1-1,idx2,dp);
+            //Replace
+            int sp3=1+solve(s1,s2,idx1-1,idx2-1,dp);
+
+            return dp[idx1][idx2]=Math.min(sp1,Math.min(sp2,sp3));
+        }
+    }
+}
+
+
+//Minimum Cost For Tickets
+
+class Solution {
+    public int mincostTickets(int[] days, int[] costs) {
+        Integer dp[][]=new Integer[days.length][400];
+        return solve(days,costs,0,0,dp);   
+    }
+    public int solve(int days[],int cost[],int validity,int i,Integer dp[][]){
+        if(i==days.length)return 0;
+        if(dp[i][validity]!=null) return dp[i][validity];
+        if(validity>=days[i]){
+            return dp[i][validity]=solve(days,cost,validity,i+1,dp);
+        }
+        else{
+
+            // 1 day
+            int sp1=cost[0]+solve(days,cost,days[i],i+1,dp);
+            // 7 Days
+            int sp2=cost[1]+solve(days,cost,days[i]+6,i+1,dp);
+            //30 Days
+            int sp3=cost[2]+solve(days,cost,days[i]+29,i+1,dp);
+
+            return dp[i][validity]=Math.min(sp1,Math.min(sp2,sp3));
+
+        }
+
+
+    }
+}
+
+
+//Unique Binary Search Trees
+class Solution {
+    public int numTrees(int n) {
+        Integer dp[]=new Integer[n+1];
+        return solve(n,dp);
+    }
+    public int solve(int n,Integer dp[]){
+        if(n<=1)return 1;
+        if(dp[n]!=null)return dp[n];
+        int ans=0;
+        for(int i=1;i<=n;i++){
+            ans+=solve(i-1,dp)*solve(n-i,dp);
+        }
+        return dp[n]=ans;
+    }
+}
+
+
